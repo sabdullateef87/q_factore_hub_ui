@@ -4,6 +4,10 @@ import Logo from "../../components/Logo/Logo";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCoffee, faBars } from "@fortawesome/free-solid-svg-icons";
+import { State } from "../../reduxStore";
+import { useSelector } from "react-redux";
+import { authFunc } from "../../functions";
+import { logOutUser } from "../../functions/auth.functions";
 
 type Props = {};
 
@@ -19,9 +23,15 @@ const DesktopNav = () => {
       <li className="font-medium cursor-pointer p-[10px]">
         <NavLink to={""}>About</NavLink>
       </li>
-      <li className="font-medium cursor-pointer p-[10px]">
-        <NavLink to={""}>Sign in</NavLink>
-      </li>
+      {authFunc.getAuthenticatedUserToken() ? (
+        <li className="font-medium cursor-pointer p-[10px]">
+          <NavLink to={"/login"}>Sign in</NavLink>
+        </li>
+      ) : (
+        <li className="font-medium cursor-pointer p-[10px]" onClick={() => logOutUser()}>
+          <NavLink to={"/login"}>Logout</NavLink>
+        </li>
+      )}
     </ul>
   );
 };
@@ -65,9 +75,15 @@ const MobileNav = () => {
             <li className="font-medium cursor-pointer p-[10px]">
               <NavLink to={""}>About</NavLink>
             </li>
-            <li className="font-medium cursor-pointer p-[10px]">
-              <NavLink to={"/login"}>Sign in</NavLink>
-            </li>
+            {authFunc.getAuthenticatedUserToken() ? (
+              <li className="font-medium cursor-pointer p-[10px]">
+                <NavLink to={"/login"}>Sign in</NavLink>
+              </li>
+            ) : (
+              <li className="font-medium cursor-pointer p-[10px]" onClick={() => logOutUser()}>
+                <NavLink to={"/login"}>Logout</NavLink>
+              </li>
+            )}
           </ul>
         </div>
       )}

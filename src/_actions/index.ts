@@ -1,0 +1,1 @@
+export * as authActionCreators from "../_actions/authorization.action";

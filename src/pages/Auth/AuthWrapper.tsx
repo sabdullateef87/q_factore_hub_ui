@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 type Props = {
   children: any;
@@ -6,7 +7,12 @@ type Props = {
 
 const AuthWrapper = (props: Props) => {
   return (
-    <div className="w-[100%] h-screen flex flex-col justify-center items-center">
+    <div className="h-screen p-4">
+      <div className="hover::pointer-cursor">
+        <Link to={"/"}>
+          <h1>Q.F</h1>
+        </Link>
+      </div>
       {props.children}
     </div>
   );
