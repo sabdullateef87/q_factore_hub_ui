@@ -44,7 +44,7 @@ const MobileNav = () => {
   return (
     <div className="block tablet:hidden desktop:hidden laptop:hidden">
       {!isOpen ? (
-        <FontAwesomeIcon
+        <div
           onClick={openNav}
           style={{
             cursor: "pointer",
@@ -52,7 +52,6 @@ const MobileNav = () => {
             height: "35px",
           }}
           color="white"
-          icon={faBars}
         />
       ) : (
         <div
