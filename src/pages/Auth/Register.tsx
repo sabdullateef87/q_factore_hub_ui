@@ -3,13 +3,16 @@ import AuthWrapper from "./AuthWrapper";
 import Container from "../../components/Container/Container";
 import { Link, useNavigate } from "react-router-dom";
 import { authReducerSignUp } from "../../_reducers/authorization.reducer";
-import { connect } from "react-redux";
+import { connect, useDispatch, useSelector } from "react-redux";
 import { bindActionCreators } from "@reduxjs/toolkit";
 import { apiConstants } from "../../_constants/api.constants";
 import Message from "../../components/Message/Message";
 import { validateRegisterForm } from "../../_util/validateFormInput/validateAuthForm";
-import { store } from "../../reduxStore";
+import { State, store } from "../../reduxStore";
+import { registerUserAction } from "../../_actions/authorization.action";
+import { authActionCreators } from "../../_actions";
 
+type Props = {};
 interface RegisterState {
   email: string;
   password: string;
@@ -21,8 +24,15 @@ const initialState = {
 
 const hostUrl = `${apiConstants.CREATE_USER}`;
 
-const Register = (props: any) => {
+const Register = (props: Props) => {
   const navigate = useNavigate();
+  const disapatch = useDispatch();
+
+  const { registerUserAction, resetRegisterNotificiation } = bindActionCreators(
+    authActionCreators,
+    disapatch
+  );
+  const registerStore = useSelector((state: State) => state.signUp);
   const [user, setUser] = React.useState<RegisterState>(initialState);
 
   const handleSubmit = (e: FormEvent) => {
@@ -31,7 +41,7 @@ const Register = (props: any) => {
       const error = validateRegisterForm(user)["error"];
       // return store.dispatch(registerUserErrorAction(error));
     }
-    props.registerUserAction(hostUrl, user);
+    registerUserAction(hostUrl, user);
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -40,8 +50,8 @@ const Register = (props: any) => {
 
   React.useEffect(() => {
     const alertTimer = setTimeout(() => {
-      props.resetNotificiation();
-      if (props.notification.hasOwnProperty("success")) {
+      resetRegisterNotificiation();
+      if (registerStore.notification.hasOwnProperty("success")) {
         navigate("/login");
       }
     }, 2000);
@@ -49,15 +59,15 @@ const Register = (props: any) => {
     return () => {
       clearTimeout(alertTimer);
     };
-  }, [props.notification]);
+  }, [registerStore.notification.success, registerStore.notification.error]);
 
   return (
     <AuthWrapper>
-      {props.notification.error && (
-        <Message message={props.notification.error} state="error" />
+      {registerStore.notification.error && (
+        <Message message={registerStore.notification.error} state="error" />
       )}
-      {props.notification.success && (
-        <Message message={props.notification.success} state="success" />
+      {registerStore.notification.success && (
+        <Message message={registerStore.notification.success} state="success" />
       )}
 
       <Container>

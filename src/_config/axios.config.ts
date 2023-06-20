@@ -19,6 +19,17 @@ const requestErrorHandler = (error: AxiosError): Promise<AxiosError> => {
     return Promise.reject(error);
 };
 
+const responseHandler = (response: AxiosResponse): any => {
+    console.log("Response : ", response);
+    return response;
+};
+
+const responseErrorHandler = (error: AxiosError): Promise<AxiosError> => {
+    console.error(`[request error] [${JSON.stringify(error)}]`);
+    return Promise.reject(error);
+};
+
 axiosInstance.interceptors.request.use(requestHandler, requestErrorHandler);
+axiosInstance.interceptors.response.use(responseHandler, responseErrorHandler);
 
 export default axiosInstance;
